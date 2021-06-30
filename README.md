@@ -1,61 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img alt="logo" src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project installation
 
-## About Laravel
+### Prerequisites
+* [Composer](https://getcomposer.org/download/)
+* [Docker](https://docs.docker.com/engine/install/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Installation
+```shell
+git clone https://github.com/xorth/image-uploader-test.git
+cd image-uploader-test
+composer install
+./vendor/bin/sail up
+```
+If you want to start the container in a detached mode:
+```shell
+./vendor/bin/sail up -d
+```
+After installation and starting the container you can visit the project entering [http://localhost](http://localhost) on your browser.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Running tests
+```shell
+./vendor/bin/sail test
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Backend Test (Laravel)
 
-## Learning Laravel
+### Upload and Display Images
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Your task is to create a web page that allows users to upload images and then display them to the user. However, because space is limited on your web server you will need to store the images in a remote image hosting service. The end-point for the service is:
+```
+https://test.rxflodev.com
+```
+The image must be base64 encoded and posted to the end-point in the following format:
+```
+imageData=base64-encoded-image-data
+```
+After receiving an image successfully the image service will return a json encoded result in the following format:
+```json
+{
+    "status": "success",
+    "message": "Image saved successfully.",
+    "url": "https://test.rxflodev.com/image-store/55c4d2369010c.png"
+}
+```
+The image must then be displayed on the web page using the url from the result.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Requirements and Specifications 
+* Create an API endpoint on the backend to transfer the image to storage service.
+* Images must be stored in the remote image service, not on your web server.
+* The most recent image should be displayed first.
+* Images must be in png format.
+* For simplicity, you may use the session for long term storage.
 
-## Laravel Sponsors
+## Frontend Test
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Upload and Display Images
 
-### Premium Partners
+Your task is to create a web page that allows users to upload images and then display them to the user. You will be uploading the images to a remote image hosting service. The end-point for the service is:
+```
+https://test.rxflodev.com/uploads/index.php
+```
+After receiving an image successfully the image service will return a json encoded result in the following format:
+```json
+{
+    "status": "success",
+    "message": "Image saved successfully.",
+    "url": "https://test.rxflodev.com/uploads/images/55c4d2369010c.png"
+}
+```
+The image must then be displayed on the web page using the url from the result.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+### Requirements and Specifications
+* The most recent uploaded image should be displayed first.
+* Uploaded images must be in png format.
+* The user should be able to upload multiple images.
+* A pure ajax solution is preferred (ie no page refresh).
+* Progress bar and other user feedback such as error / success feedback are a plus.
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Additional requirements
+* Given the project that you have already done, implement the layout for uploading multiple images using react components, you can use a React dropzone 3rd party library to give the user a good way to upload more than one image at a time.
+* Don't create a React project separately, instead, install react in your laravel project, and compile your js and css assets using webpack or a bundler of your preference.
+* Send the data asynchronously (either using axios, fetch, ajax, etc.) to the Laravel route you already have for posting data (make any changes if needed). After the upload is successful, images should be shown without the need of refreshing the page.
+* Finally, add the feature to delete images, images should be taken out of the layout without the need to refresh the page but if someone refreshes the page the images shouldn't be shown either.
 
 ## License
 
