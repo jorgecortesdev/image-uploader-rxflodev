@@ -18,3 +18,4 @@ Route::view('/', 'images');
 
 Route::post('images', [ImagesController::class, 'store']);
 Route::get('images', [ImagesController::class, 'index']);
+Route::delete('images/{index}', [ImagesController::class, 'destroy']);

@@ -40,4 +40,22 @@ class ImagesController extends Controller
 
         return $response;
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $index
+     * @return string
+     */
+    public function destroy($index): string
+    {
+        $images = session()->get('images', []);
+        if (isset($images[$index])) {
+            array_splice($images, $index, 1);
+            session()->put('images',$images);
+            return $this->sendResponse(['message' => 'DELETED']);
+        }
+
+        return $this->sendError('NOT DELETED');
+    }
 }

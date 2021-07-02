@@ -28,4 +28,22 @@ class ImagesManagementTest extends TestCase
 
         $this->assertCount(0, $response['images']);
     }
+
+    /** @test */
+    public function it_can_delete_an_image_from_list_in_session()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->withSession([
+                'images' => [
+                    'https://test.rxflodev.com/image-store/foo.png',
+                    'https://test.rxflodev.com/image-store/foo.png',
+                    'https://test.rxflodev.com/image-store/foo.png'
+                ]
+            ])->delete('images/1');
+
+        $response = $this->get('images')->json('data');
+
+        $this->assertCount(2, $response['images']);
+    }
 }

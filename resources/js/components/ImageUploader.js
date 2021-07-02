@@ -52,6 +52,21 @@ class ImageUploader extends React.Component {
             .finally(() => component.setState({file: []}));
     }
 
+    removeImage(index) {
+        let component = this;
+        fetch(`/images/${index}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.head.querySelector("[name=csrf-token]").content
+            }
+        }).then((response) => {
+                let images = component.state.images;
+                images.splice(index, 1);
+                component.setState({images: images});
+            })
+            .catch((error) => console.log(error));
+    }
+
     render() {
         return (
             <div className="container">
@@ -93,7 +108,7 @@ class ImageUploader extends React.Component {
                     <div className="col">
                         <div className="grid">
                             {this.state.images.map((value, index) => {
-                                return <div className="grid__item" key={index}><img src={value} alt={value}/></div>
+                                return <div className="grid__item" key={index}><img src={value} alt={value}/><button className="btn btn-danger" onClick={() => this.removeImage(index)}>Remove</button></div>
                             })}
                         </div>
                     </div>
