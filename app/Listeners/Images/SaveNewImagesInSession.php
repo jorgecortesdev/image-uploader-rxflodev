@@ -14,8 +14,7 @@ class SaveNewImagesInSession
      */
     public function handle(ImageSaved $event)
     {
-        foreach ($event->images as $image) {
-            session()->push('images', $image);
-        }
+        $images = array_merge($event->images, session()->get('images', []));
+        session()->put('images', $images);
     }
 }
