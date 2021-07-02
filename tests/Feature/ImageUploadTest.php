@@ -28,7 +28,7 @@ class ImageUploadTest extends TestCase
     {
         $file = UploadedFile::fake()->image('foo.png');
 
-        $response = $this->post('api/images', ['images' => [$file]]);
+        $response = $this->post('images', ['images' => [$file]]);
 
         $response->assertJson([
             'status' => 'success',
@@ -46,7 +46,7 @@ class ImageUploadTest extends TestCase
         $fileOne = UploadedFile::fake()->image('foo.png');
         $fileTwo = UploadedFile::fake()->image('foo.png');
 
-        $response = $this->post('api/images', ['images' => [$fileOne, $fileTwo]]);
+        $response = $this->post('images', ['images' => [$fileOne, $fileTwo]]);
 
         $response->assertJson([
             'status' => 'success',
@@ -62,7 +62,7 @@ class ImageUploadTest extends TestCase
     /** @test */
     public function it_requires_images_field()
     {
-        $response = $this->post('api/images', []);
+        $response = $this->post('images', []);
 
         $response->assertJson([
             'status' => 'error',
@@ -75,7 +75,7 @@ class ImageUploadTest extends TestCase
     {
         $file = UploadedFile::fake()->image('foo.gif');
 
-        $response = $this->post('api/images', ['images' => [$file]]);
+        $response = $this->post('images', ['images' => [$file]]);
 
         $response->assertJson([
             'status' => 'error',
@@ -88,7 +88,7 @@ class ImageUploadTest extends TestCase
     {
         $file = UploadedFile::fake()->image('foo.png');
 
-        $response = $this->post('api/images', ['images' => [$file]]);
+        $response = $this->post('images', ['images' => [$file]]);
 
         $response->assertSessionHas(['images' => [
             'https://test.rxflodev.com/image-store/foo.png'
@@ -101,7 +101,7 @@ class ImageUploadTest extends TestCase
         $fileOne = UploadedFile::fake()->image('foo.png');
         $fileTwo = UploadedFile::fake()->image('foo.png');
 
-        $response = $this->post('api/images', ['images' => [$fileOne, $fileTwo]]);
+        $response = $this->post('images', ['images' => [$fileOne, $fileTwo]]);
 
         $response->assertSessionHas(['images' => [
             'https://test.rxflodev.com/image-store/foo.png',

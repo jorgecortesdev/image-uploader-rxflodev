@@ -11,6 +11,16 @@ use Illuminate\Validation\ValidationException;
 class ImagesController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     *
+     * @return string
+     */
+    public function index(): string
+    {
+        return $this->sendResponse(['images' => session()->get('images', [])]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request

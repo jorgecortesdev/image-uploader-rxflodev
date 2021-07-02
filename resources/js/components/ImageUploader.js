@@ -11,6 +11,14 @@ class ImageUploader extends React.Component {
         };
     }
 
+    componentDidMount() {
+        let component = this;
+        fetch('/images')
+            .then((response) => response.json())
+            .then(({data}) => component.setState({images: data.images}))
+            .catch((error) => console.log(error));
+    }
+
     handleChange = (event) => {
         this.setState({file: [event.target.files[0]]});
     }
@@ -32,9 +40,12 @@ class ImageUploader extends React.Component {
         });
 
         let component = this;
-        fetch('/api/images', {
+        fetch('/images', {
             method: 'POST',
-            body: formData
+            headers: {
+                'X-CSRF-TOKEN': document.head.querySelector("[name=csrf-token]").content
+            },
+            body: formData,
         }).then((response) => response.json())
             .then(({data}) => component.setState({images: data.images.concat(component.state.images)}))
             .catch((error) => console.log(error))
