@@ -11,27 +11,39 @@ use Illuminate\Validation\ValidationException;
 class ImagesController extends Controller
 {
     /**
+     * @var StorageService
+     */
+    protected $storage;
+
+    /**
+     * @param StorageService $storage
+     */
+    public function __construct(StorageService $storage)
+    {
+        $this->storage = $storage;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return string
      */
     public function index(): string
     {
-        return $this->sendResponse(['images' => session()->get('images', [])]);
+        return $this->sendResponse(['images' => $this->storage->all()]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @param StorageService $storage
      * @return string
      */
-    public function store(Request $request, StorageService $storage): string
+    public function store(Request $request): string
     {
         try {
             $this->validate($request, ['images' => 'required', 'images.*' => 'image|mimes:png']);
-            $savedImages = $storage->save($request->file('images'));
+            $savedImages = $this->storage->save($request->file('images'));
             $response = $this->sendResponse(['images' => $savedImages]);
         } catch (ValidationException $e) {
             $errors = Arr::flatten($e->errors());
@@ -49,10 +61,7 @@ class ImagesController extends Controller
      */
     public function destroy($index): string
     {
-        $images = session()->get('images', []);
-        if (isset($images[$index])) {
-            array_splice($images, $index, 1);
-            session()->put('images',$images);
+        if ($this->storage->delete($index)) {
             return $this->sendResponse(['message' => 'DELETED']);
         }
 

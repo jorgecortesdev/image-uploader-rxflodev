@@ -17,6 +17,11 @@ class ImageStorageService implements StorageService
         $this->host = config('services.rxflodev.host');
     }
 
+    public function all(): array
+    {
+        return session()->get('images', []);
+    }
+
     public function save(array $images): array
     {
         $savedImages = [];
@@ -30,6 +35,18 @@ class ImageStorageService implements StorageService
         ImageSaved::dispatch($savedImages);
 
         return $savedImages;
+    }
+
+    public function delete(int $id): bool
+    {
+        $images = session()->get('images', []);
+        if (isset($images[$id])) {
+            array_splice($images, $id, 1);
+            session()->put('images', $images);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -60,4 +77,5 @@ class ImageStorageService implements StorageService
     {
         return array_reverse($savedImages);
     }
+
 }
