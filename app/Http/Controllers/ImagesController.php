@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Services\StorageService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
@@ -26,45 +26,43 @@ class ImagesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return string
+     * @return JsonResponse
      */
-    public function index(): string
+    public function index(): JsonResponse
     {
-        return $this->sendResponse(['images' => $this->storage->all()]);
+        return $this->sendJsonResponse(['images' => $this->storage->all()]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return string
+     * @param  \Illuminate\Http\Request  $request
+     * @return JsonResponse
      */
-    public function store(Request $request): string
+    public function store(Request $request): JsonResponse
     {
         try {
             $this->validate($request, ['images' => 'required', 'images.*' => 'image|mimes:png']);
             $savedImages = $this->storage->save($request->file('images'));
-            $response = $this->sendResponse(['images' => $savedImages]);
+            return $this->sendJsonResponse(['images' => $savedImages], 201);
         } catch (ValidationException $e) {
             $errors = Arr::flatten($e->errors());
-            $response = $this->sendError(array_shift($errors));
+            return $this->sendJsonError(array_shift($errors), 422);
         }
-
-        return $response;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param $index
-     * @return string
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy($index): string
+    public function destroy(int $id): JsonResponse
     {
-        if ($this->storage->delete($index)) {
-            return $this->sendResponse(['message' => 'DELETED']);
+        if ($this->storage->delete($id)) {
+            return $this->sendJsonResponse(['message' => 'DELETED'], 204);
         }
 
-        return $this->sendError('NOT DELETED');
+        return $this->sendJsonResponse(['message' => 'Nothing happened!']);
     }
 }

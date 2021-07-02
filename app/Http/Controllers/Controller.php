@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
+use Psy\Util\Json;
 
 class Controller extends BaseController
 {
@@ -13,25 +15,31 @@ class Controller extends BaseController
 
     /**
      * @param array $data
-     * @return string
+     * @param int $code
+     * @param array $headers
+     * @return JsonResponse
      */
-    protected function sendResponse(array $data): string
+    protected function sendJsonResponse(array $data, int $code = 200, array $headers = []): JsonResponse
     {
-        return json_encode([
+        $response = [
             'status' => 'success',
             'data' => $data
-        ]);
+        ];
+        return response()->json($response, $code, $headers);
     }
 
     /**
      * @param string $error
-     * @return string
+     * @param int $code
+     * @param array $headers
+     * @return JsonResponse
      */
-    protected function sendError(string $error): string
+    protected function sendJsonError(string $error, int $code = 400, array $headers = []): JsonResponse
     {
-        return json_encode([
+        $response = [
             'status' => 'error',
             'message' => $error
-        ]);
+        ];
+        return response()->json($response, $code, $headers);
     }
 }
