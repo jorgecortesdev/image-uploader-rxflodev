@@ -1,40 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Dropzone from 'react-dropzone';
 
 class ImageUploader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            file: '',
+            file: [],
             images: []
         };
     }
 
     handleChange = (event) => {
-        this.setState({file: event.target.files[0]});
+        this.setState({file: [event.target.files[0]]});
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
+        this.postImages();
+    }
 
+    handleDropzone = (images) => {
+        this.setState({file: images});
+        this.postImages();
+    }
+
+    postImages() {
         let formData = new FormData();
-        formData.append('images[]', this.state.file);
+        this.state.file.forEach((file) => {
+            formData.append('images[]', file);
+        });
 
-        let vm = this;
+        let component = this;
         fetch('/api/images', {
             method: 'POST',
             body: formData
-        }).then(function (response) {
-            return response.json();
-        }).then(function ({data}) {
-            vm.updateImages(data.images);
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
-
-    updateImages(images) {
-        this.setState({'images': images.concat(this.state.images)});
+        }).then((response) => response.json())
+            .then(({data}) => component.setState({images: data.images.concat(component.state.images)}))
+            .catch((error) => console.log(error))
+            .finally(() => component.setState({file: []}));
     }
 
     render() {
@@ -42,15 +46,15 @@ class ImageUploader extends React.Component {
             <div className="container">
                 <div className="row justify-content-center mb-5">
                     <div className="col-md-8">
-                        <div className="card">
-                            <div className="card-body">
-                                <form onSubmit={this.handleSubmit}>
+                        <div className="card h-100">
+                            <div className="card-body d-flex align-items-center">
+                                <form onSubmit={this.handleSubmit} className="w-100">
                                     <div className="form-row align-items-center">
                                         <div className="col-auto flex-grow-1">
                                             <input type="file" name="file" onChange={this.handleChange} />
                                         </div>
                                         <div className="col-auto">
-                                            <button disabled={!this.state.file} className="btn btn-success">Upload Image</button>
+                                            <button disabled={!this.state.file.length} className="btn btn-success">Upload Image</button>
                                         </div>
                                     </div>
                                 </form>
@@ -60,7 +64,16 @@ class ImageUploader extends React.Component {
                     <div className="col-md-4">
                         <div className="card">
                             <div className="card-body text-center">
-                                DropZone
+                                <Dropzone onDrop={acceptedFiles => this.handleDropzone(acceptedFiles)}>
+                                    {({getRootProps, getInputProps}) => (
+                                        <section>
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <p>Drag 'n' drop some files here, or click to select files</p>
+                                            </div>
+                                        </section>
+                                    )}
+                                </Dropzone>
                             </div>
                         </div>
                     </div>
@@ -68,9 +81,9 @@ class ImageUploader extends React.Component {
                 <div className="row">
                     <div className="col">
                         <div className="grid">
-                        {this.state.images.map((value, index) => {
-                            return <div className="grid__item" key={index}><img src={value} alt={value}/></div>
-                        })}
+                            {this.state.images.map((value, index) => {
+                                return <div className="grid__item" key={index}><img src={value} alt={value}/></div>
+                            })}
                         </div>
                     </div>
                 </div>
