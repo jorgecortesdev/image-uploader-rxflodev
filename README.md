@@ -8,7 +8,7 @@
 
 ### Installation
 ```shell
-git clone https://github.com/xorth/image-uploader-test.git
+git clone https://github.com/xorth/image-uploader-rxflodev.git
 cd image-uploader-test
 composer install
 ./vendor/bin/sail up
