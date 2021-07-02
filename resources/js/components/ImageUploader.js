@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Dropzone from 'react-dropzone';
+import NProgress from 'nprogress';
 
 class ImageUploader extends React.Component {
     constructor(props) {
@@ -13,10 +14,12 @@ class ImageUploader extends React.Component {
 
     componentDidMount() {
         let component = this;
+        NProgress.start();
         fetch('/images')
             .then((response) => response.json())
             .then(({data}) => component.setState({images: data.images}))
-            .catch((error) => console.log(error));
+            .catch((error) => console.log(error))
+            .finally(() => NProgress.done());
     }
 
     handleChange = (event) => {
@@ -34,6 +37,7 @@ class ImageUploader extends React.Component {
     }
 
     postImages() {
+        NProgress.start();
         let formData = new FormData();
         this.state.file.forEach((file) => {
             formData.append('images[]', file);
@@ -49,10 +53,14 @@ class ImageUploader extends React.Component {
         }).then((response) => response.json())
             .then(({data}) => component.setState({images: data.images.concat(component.state.images)}))
             .catch((error) => console.log(error))
-            .finally(() => component.setState({file: []}));
+            .finally(() => {
+                component.setState({file: []})
+                NProgress.done();
+            });
     }
 
     removeImage(index) {
+        NProgress.start();
         let component = this;
         fetch(`/images/${index}`, {
             method: 'DELETE',
@@ -64,7 +72,8 @@ class ImageUploader extends React.Component {
                 images.splice(index, 1);
                 component.setState({images: images});
             })
-            .catch((error) => console.log(error));
+            .catch((error) => console.log(error))
+            .finally(() => NProgress.done());
     }
 
     render() {

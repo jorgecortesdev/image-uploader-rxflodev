@@ -25,6 +25,7 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
+        "nprogress": "^0.2.0",
         "react-dropzone": "^11.3.4"
     }
 }
