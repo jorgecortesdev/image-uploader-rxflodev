@@ -9,7 +9,7 @@
 ### Installation
 ```shell
 git clone https://github.com/xorth/image-uploader-rxflodev.git
-cd image-uploader-test
+cd image-uploader-rxflodev
 composer install
 ./vendor/bin/sail up
 ```
