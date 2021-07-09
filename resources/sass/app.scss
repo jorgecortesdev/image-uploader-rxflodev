@@ -55,3 +55,28 @@ body {
     border-left-color: red;
 }
 
+/* Flash message */
+.flash-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+
+    .flash-body {
+        position: relative;
+        left: -50%;
+        padding: 5px 20px;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        box-shadow: 3px 2px 3px rgb(0 0 0 / 40%);
+        color: #fff;
+
+        &.flash-danger {
+            background-color: #ff0000;
+        }
+
+        &.flash-success {
+            background-color: green;
+        }
+    }
+}
+
