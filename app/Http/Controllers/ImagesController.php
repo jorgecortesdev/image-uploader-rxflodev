@@ -42,7 +42,7 @@ class ImagesController extends Controller
     public function store(Request $request): JsonResponse
     {
         try {
-            $this->validate($request, ['images' => 'required', 'images.*' => 'image|mimes:png']);
+            $this->validate($request, ['images' => 'required', 'images.*' => 'image|mimes:png'], ['mimes' => 'File type must be png']);
             $savedImages = $this->storage->save($request->file('images'));
             return $this->sendJsonResponse(['images' => $savedImages], 201);
         } catch (ValidationException $e) {
