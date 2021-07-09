@@ -11,6 +11,10 @@
 git clone https://github.com/xorth/image-uploader-rxflodev.git
 cd image-uploader-rxflodev
 composer install
+cp .env.example .env
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run dev
 ./vendor/bin/sail up
 ```
 If you want to start the container in a detached mode:
