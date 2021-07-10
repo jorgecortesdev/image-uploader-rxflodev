@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'images');
+Route::view('/', 'homepage');
 
 Route::post('images', [ImagesController::class, 'store']);
 Route::get('images', [ImagesController::class, 'index']);
