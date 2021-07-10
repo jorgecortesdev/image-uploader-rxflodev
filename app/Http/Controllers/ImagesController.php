@@ -44,7 +44,7 @@ class ImagesController extends Controller
         try {
             $this->validate($request, ['images' => 'required', 'images.*' => 'image|mimes:png'], ['mimes' => 'File type must be png']);
             $savedImages = $this->storage->save($request->file('images'));
-            return $this->sendJsonResponse(['images' => $savedImages], 201);
+            return $this->sendJsonResponse(['images' => $savedImages], 'Image(s) Saved', 201);
         } catch (ValidationException $e) {
             $errors = Arr::flatten($e->errors());
             return $this->sendJsonError(array_shift($errors), 422);
@@ -60,9 +60,9 @@ class ImagesController extends Controller
     public function destroy(int $id): JsonResponse
     {
         if ($this->storage->delete($id)) {
-            return $this->sendJsonResponse(['message' => 'DELETED'], 204);
+            return $this->sendJsonResponse([], 'Image Deleted');
         }
 
-        return $this->sendJsonResponse(['message' => 'Nothing happened!']);
+        return $this->sendJsonResponse([], 'Nothing happened!');
     }
 }
