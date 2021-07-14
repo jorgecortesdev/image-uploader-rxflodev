@@ -79,7 +79,7 @@ class ImageUploadTest extends TestCase
 
         $response->assertJson([
             'status' => 'error',
-            'message' => "The images.0 must be a file of type: png."
+            'message' => "File type must be png"
         ]);
     }
 
