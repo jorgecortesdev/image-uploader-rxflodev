@@ -8,7 +8,7 @@
 
 ### Installation
 ```shell
-git clone https://github.com/xorth/image-uploader-rxflodev.git
+git clone https://github.com/jorgecortesdev/image-uploader-rxflodev.git
 cd image-uploader-rxflodev
 composer install
 cp .env.example .env
